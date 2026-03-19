@@ -22,12 +22,29 @@ import FacultyMyContests from './pages/FacultyMyContests';
 import AdminContests from './pages/AdminContests';
 import { AuthProvider } from './context/AuthContext';
 
+import BlogList from './pages/Blogs/BlogList';
+import BlogDetail from './pages/Blogs/BlogDetail';
+import CreateBlog from './pages/Blogs/CreateBlog';
+import Compiler from './pages/Compiler';
+
 export default function App() {
   const location = useLocation();
   const hideNavPaths = ['/', '/login', '/register', '/faculty/register'];
 
   return (
     <AuthProvider>
+      <AppContent location={location} hideNavPaths={hideNavPaths} />
+    </AuthProvider>
+  );
+}
+
+import { useContext } from 'react';
+import AuthContext from './context/AuthContext';
+
+function AppContent({ location, hideNavPaths }) {
+  const { user } = useContext(AuthContext);
+
+  return (
       <div className="min-h-screen">
         {!hideNavPaths.includes(location.pathname) && <NavBar />}
         <main className="container mx-auto p-4">
@@ -67,11 +84,18 @@ export default function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/:id" element={<Profile />} />
 
+            {/* Blogs */}
+            <Route path="/blogs" element={<BlogList user={user} />} />
+            <Route path="/blogs/create" element={<CreateBlog user={user} />} />
+            <Route path="/blogs/:id" element={<BlogDetail user={user} />} />
+
+            {/* Compiler */}
+            <Route path="/compiler" element={<Compiler />} />
+
             {/* Fallback */}
             <Route path="*" element={<div className="card">Page not found</div>} />
           </Routes>
         </main>
       </div>
-    </AuthProvider>
   );
 }

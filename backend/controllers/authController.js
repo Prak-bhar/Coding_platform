@@ -1,4 +1,4 @@
-import pool from '../config/db.js';
+import * as authModel from '../models/authModel.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -14,15 +14,11 @@ export const register = async (req, res) => {
         if (role !== 'user' && role !== 'faculty' && role !== 'admin')
             return res.status(400).json({ message: 'Invalid role' });
 
-        const [exists] = await pool.query('SELECT id FROM users WHERE email = ?', [email]);
+        const exists = await authModel.findUserByEmail(email);
         if (exists.length)
             return res.status(400).json({ message: 'Email already registered' });
         const rating = role === 'user' ? 1000 : null;
-        const [result] = await pool.query(
-            `INSERT INTO users (name, email, password, role, department_id, batch, rating)
-        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [name, email, password, role, department_id, batch, rating]
-        );
+        const result = await authModel.createUser({ name, email, password, role, department_id, batch, rating });
 
         const userId = result.insertId;
         const token = jwt.sign(
@@ -56,7 +52,7 @@ export const login = async (req, res) => {
         if (!email || !password)
             return res.status(400).json({ message: 'Missing fields' });
 
-        const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+        const rows = await authModel.findUserByEmail(email);
         if (!rows.length)
             return res.status(400).json({ message: 'Invalid credentials' });
 

@@ -7,6 +7,7 @@ import ContestLeaderboard from '../components/ContestLeaderboard';
 import ContestProblems from '../components/ContestProblems';
 import ContestSummary from '../components/ContestSummary';
 import RatingManager from '../components/RatingManager';
+import ContestFeedback from '../components/ContestFeedback';
 
 // Helper to format date (copied from Contests.js for consistency)
 const formatDateTime = (dateString) => {
@@ -202,6 +203,7 @@ export default function ContestDetail() {
               { key: 'submissions', label: 'Submissions' },
               { key: 'problems', label: 'Problems' },
               { key: 'summary', label: 'Summary' },
+              ...(isEnded ? [{ key: 'feedback', label: 'Feedback' }] : []),
               ...(canManageRatings ? [{ key: 'ratings', label: 'Ratings' }] : []),
             ].map(({ key, label }) => (
               <button
@@ -234,6 +236,10 @@ export default function ContestDetail() {
 
           {tab === 'summary' && (
             <ContestSummary contest={contest} token={token} />
+          )}
+
+          {tab === 'feedback' && (
+            <ContestFeedback contest={contest} token={token} user={user} />
           )}
 
           {tab === 'ratings' && canManageRatings && (

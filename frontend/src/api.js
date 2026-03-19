@@ -370,6 +370,92 @@ export const deleteContestAdmin = async (token, contestId) => {
   return data;
 };
 
+
+// --- BLOG APIs ---
+
+export const fetchBlogs = async () => {
+  const res = await fetch(`${BASE}/api/blogs`);
+  const data = await json(res);
+  if (!res.ok) throw data;
+  return data;
+};
+
+export const fetchBlogById = async (blogId) => {
+  const res = await fetch(`${BASE}/api/blogs/${blogId}`);
+  const data = await json(res);
+  if (!res.ok) throw data;
+  return data;
+};
+
+export const createBlog = async (token, payload) => {
+  const res = await fetch(`${BASE}/api/blogs`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  });
+  const data = await json(res);
+  if (!res.ok) throw data;
+  return data;
+};
+
+export const addBlogComment = async (token, blogId, text) => {
+  const res = await fetch(`${BASE}/api/blogs/${blogId}/comments`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ text }),
+  });
+  const data = await json(res);
+  if (!res.ok) throw data;
+  return data;
+};
+
+export const likeBlog = async (token, blogId) => {
+  const res = await fetch(`${BASE}/api/blogs/${blogId}/like`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await json(res);
+  if (!res.ok) throw data;
+  return data;
+};
+
+
+// --- CONTEST FEEDBACK APIs ---
+
+export const submitContestFeedback = async (token, contestId, payload) => {
+  const res = await fetch(`${BASE}/api/contests/${contestId}/feedback`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  });
+  const data = await json(res);
+  if (!res.ok) throw data;
+  return data;
+};
+
+export const fetchContestFeedback = async (token, contestId) => {
+  const res = await fetch(`${BASE}/api/contests/${contestId}/feedback`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await json(res);
+  if (!res.ok) throw data;
+  return data;
+};
+
+
+// --- COMPILER APIs ---
+
+export const runCode = async (payload) => {
+  const res = await fetch(`${BASE}/api/compiler/run`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await json(res);
+  if (!res.ok) throw data;
+  return data;
+};
+
 export default {
   login,
   register,
@@ -406,4 +492,12 @@ export default {
   downloadDepartmentBatchStats,
   updateContestAdmin,
   deleteContestAdmin,
+  fetchBlogs,
+  fetchBlogById,
+  createBlog,
+  addBlogComment,
+  likeBlog,
+  submitContestFeedback,
+  fetchContestFeedback,
+  runCode,
 };

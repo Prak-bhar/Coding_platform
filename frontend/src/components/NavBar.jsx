@@ -32,6 +32,12 @@ export default function NavBar() {
               <Link to="/contests" className="muted hover:accent font-medium">
                 Contests
               </Link>
+              <Link to="/blogs" className="muted hover:accent font-medium">
+                Blogs
+              </Link>
+              <Link to="/compiler" className="muted hover:accent font-medium">
+                Compiler
+              </Link>
               <Link
                 to={
                   user.role === 'admin'
@@ -78,6 +84,12 @@ export default function NavBar() {
               </Link>
               <Link to="/contests" className="muted hover:accent font-medium">
                 Contests
+              </Link>
+              <Link to="/blogs" className="muted hover:accent font-medium">
+                Blogs
+              </Link>
+              <Link to="/compiler" className="muted hover:accent font-medium">
+                Compiler
               </Link>
 
               {user && (

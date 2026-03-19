@@ -12,6 +12,8 @@ import departmentRoutes from './routes/departments.js';
 import facultyContestRoutes from './routes/facultyContests.js';
 import adminContestRoutes from './routes/adminContests.js';
 import adminAnalyticsRoutes from './routes/adminAnalytics.js';
+import blogRoutes from './routes/blogs.js';
+import { runCode } from './controllers/compilerController.js';
 
 const app = express();
 app.use(cors());
@@ -26,6 +28,10 @@ app.use('/api/departments', departmentRoutes);
 app.use('/api/faculty/contests', facultyContestRoutes)
 app.use('/api/admin/contests', adminContestRoutes)
 app.use('/api/admin/analytics', adminAnalyticsRoutes)
+app.use('/api/blogs', blogRoutes);
+
+// Compiler proxy route
+app.post('/api/compiler/run', runCode);
 
 app.get('/', (req, res) => res.send({ ok: true }));
 
