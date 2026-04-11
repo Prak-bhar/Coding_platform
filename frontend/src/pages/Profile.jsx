@@ -82,19 +82,29 @@ function TagRow({ name, attempted, solved }) {
 
 function getRatingColor(rating) {
   if (!rating) return 'var(--text-muted)';
-  if (rating >= 2100) return '#f59e0b';
-  if (rating >= 1900) return '#a78bfa';
-  if (rating >= 1700) return 'var(--cyan)';
-  if (rating >= 1500) return 'var(--emerald)';
-  return 'var(--text-secondary)';
+  if (rating >= 3000) return '#ff0000'; // Legendary Grandmaster
+  if (rating >= 2600) return '#ff0000'; // International Grandmaster
+  if (rating >= 2400) return '#ff0000'; // Grandmaster
+  if (rating >= 2300) return '#ff8c00'; // International Master
+  if (rating >= 2100) return '#ff8c00'; // Master
+  if (rating >= 1900) return '#aa00aa'; // Candidate Master
+  if (rating >= 1600) return '#0000ff'; // Expert
+  if (rating >= 1400) return '#03a89e'; // Specialist
+  if (rating >= 1200) return '#008000'; // Pupil
+  return '#808080'; // Newbie
 }
 
 function getRatingLabel(rating) {
   if (!rating) return '';
-  if (rating >= 2100) return 'Grandmaster';
-  if (rating >= 1900) return 'Master';
-  if (rating >= 1700) return 'Expert';
-  if (rating >= 1500) return 'Specialist';
+  if (rating >= 3000) return 'Legendary Grandmaster';
+  if (rating >= 2600) return 'International Grandmaster';
+  if (rating >= 2400) return 'Grandmaster';
+  if (rating >= 2300) return 'International Master';
+  if (rating >= 2100) return 'Master';
+  if (rating >= 1900) return 'Candidate Master';
+  if (rating >= 1600) return 'Expert';
+  if (rating >= 1400) return 'Specialist';
+  if (rating >= 1200) return 'Pupil';
   return 'Newbie';
 }
 
@@ -121,7 +131,7 @@ export default function Profile() {
 
   if (error) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ padding: '20px 24px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: 12, color: '#f87171', fontSize: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
+      <div className="ui-alert-error" style={{ padding: '20px 24px', gap: 10 }}>
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
@@ -133,10 +143,9 @@ export default function Profile() {
   if (!profile) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, color: 'var(--text-muted)' }}>
-        <div style={{ width: 32, height: 32, border: '3px solid var(--border)', borderTopColor: 'var(--cyan)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        <div className="ui-spinner ui-spinner-lg" />
         <span style={{ fontFamily: 'var(--font-display)', fontSize: 14 }}>Loading profile...</span>
       </div>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 
@@ -161,14 +170,6 @@ export default function Profile() {
           }} />
 
           <div className="flex items-start gap-10 flex-wrap lg:flex-nowrap relative z-1">
-            {/* Avatar */}
-            <div className="w-24 h-24 rounded-3xl flex items-center justify-center text-4xl font-extrabold text-[#080c14] shadow-2xl flex-shrink-0"
-                 style={{
-                   background: `linear-gradient(135deg, ${ratingColor}, ${ratingColor}88)`,
-                   boxShadow: `0 12px 40px ${ratingColor}33`,
-                 }}>
-              {user.name?.charAt(0)?.toUpperCase() || 'U'}
-            </div>
 
             {/* Info */}
             <div className="flex-1 space-y-4">
@@ -241,8 +242,8 @@ export default function Profile() {
               Difficulty Breakdown
             </h3>
             <DifficultyBar label="Easy" {...getDiff('easy')} color="var(--emerald)" />
-            <DifficultyBar label="Medium" {...getDiff('medium')} color="#f59e0b" />
-            <DifficultyBar label="Hard" {...getDiff('hard')} color="#ef4444" />
+            <DifficultyBar label="Medium" {...getDiff('medium')} color="var(--amber)" />
+            <DifficultyBar label="Hard" {...getDiff('hard')} color="var(--red)" />
           </div>
 
           {/* Weak Topics */}
@@ -275,9 +276,9 @@ export default function Profile() {
                     </span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <div style={{ width: 60, height: 3, background: 'var(--bg-2)', borderRadius: 2, overflow: 'hidden' }}>
-                        <div style={{ height: '100%', width: `${t.wrong_percent}%`, background: '#ef4444', borderRadius: 2 }} />
+                        <div style={{ height: '100%', width: `${t.wrong_percent}%`, background: 'var(--red)', borderRadius: 2 }} />
                       </div>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: 12, color: '#f87171', minWidth: 40, textAlign: 'right' }}>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: 12, color: 'var(--red)', minWidth: 40, textAlign: 'right' }}>
                         {t.wrong_percent}%
                       </span>
                     </div>
@@ -328,7 +329,7 @@ export default function Profile() {
                       transition: 'background 0.15s',
                       borderBottom: i < contest_history.length - 1 ? '1px solid var(--border)' : 'none',
                     }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,212,255,0.04)'}
+                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(161,98,7,0.06)'}
                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                   >
                     <div>
@@ -357,7 +358,6 @@ export default function Profile() {
           </div>
         </div>
       </div>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </>
   );
 }
